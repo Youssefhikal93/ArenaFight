@@ -36,7 +36,7 @@ The game includes the following fighters, each with unique characteristics:
 1. Clone the repository:
    ``` sh
       git clone https://github.com/Youssefhikal93/ArenaFight
-   ``
+   ```
 
    2. Open the project in Visual Studio 2022.
 3. Build and run the project.
