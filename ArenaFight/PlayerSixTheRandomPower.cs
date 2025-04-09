@@ -11,8 +11,8 @@ namespace ArenaFight
          Random rnd = new Random();
         public PlayerSixTheRandomPower():base("The Randomly")
         {
-            this.AttackPower = rnd.Next(1, 100);
-            this.DefencePower = rnd.Next(1, 40);
+            this.AttackPower = rnd.Next(1, 150);
+            this.DefencePower = rnd.Next(1, 150);
         }
     }
 }

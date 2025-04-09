@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Xml;
 
 namespace ArenaFight
 {
@@ -8,223 +9,131 @@ namespace ArenaFight
         {
             Random random = new Random();
             int diceRoll = random.Next(1, 7);
+            
 
-            var destroyer = new PLayerOneTheDestroyer();
-            var defender = new PlayerTwoTheDefencer();
-            var balancer = new PlayerThreeTheBalancer();
-            var killer = new PlayerFourKillShot();
-            var loser = new PlayerFiveTheLoser();
-            var randomPlayer = new PlayerSixTheRandomPower();
+            //var destroyer = new PLayerOneTheDestroyer();
+            //var defender = new PlayerTwoTheDefencer();
+            //var balancer = new PlayerThreeTheBalancer();
+            //var killer = new PlayerFourKillShot();
+            //var loser = new PlayerFiveTheLoser();
+            //var randomPlayer = new PlayerSixTheRandomPower();
+            var fightActions = new FightActions();
 
-            int playerOne;
-            int playerTwo;
+           
             int input;
 
-            Fighter playerOneChoice = new Fighter(String.Empty);
-            Fighter playerTwoChoice = new Fighter(String.Empty);
+            Fighter playerOneChoice = new Fighter("");
+            Fighter playerTwoChoice = new Fighter("");
 
             while (true)
             {
+                var destroyer = new PLayerOneTheDestroyer();
+                var defender = new PlayerTwoTheDefencer();
+                var balancer = new PlayerThreeTheBalancer();
+                var killer = new PlayerFourKillShot();
+                var loser = new PlayerFiveTheLoser();
+                var randomPlayer = new PlayerSixTheRandomPower();
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\n");
                 Console.WriteLine("***************************************");
-                Console.WriteLine("*                                     *");
                 Console.WriteLine("*       WELCOME TO THE ARENA FIGHT    *");
-                Console.WriteLine("*                                     *");
                 Console.WriteLine("***************************************");
-                Console.WriteLine("\n\n\n");
+                Console.WriteLine("");
                 Console.ResetColor();
                 
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("Player one");
-                Helpers.ClearColor();
+               
                 Console.WriteLine("Press any key to get your figher or -1 to exit the game.\n");
                 bool isValidInput = int.TryParse(Console.ReadLine(),out input);
 
-                 playerOne = diceRoll;
+                if (input == -1)
+                    break;
+                
 
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                if (input != -1)
-                {
-                    switch (diceRoll)
-                    {
-                        case 1:
-                            Console.WriteLine($"Your Player: {destroyer}");
-                            playerOneChoice = destroyer;
-                            break;
-                        case 2:
-                            Console.WriteLine($"Your Player: {defender}");
-                            playerOneChoice = defender;
-                            break;
-                        case 3:
-                            Console.WriteLine($"Your Player: {balancer}");
-                            playerOneChoice = balancer;
-                            break;
-                        case 4:
-                            Console.WriteLine($"Your Player: {killer}");
-                            playerOneChoice = killer;
-                            break;
-                        case 5:
-                            Console.WriteLine($"Your Player: {loser}");
-                            playerOneChoice = loser;
-                            break;
-                        case 6:
-                            Console.WriteLine($"Your Player: {randomPlayer}");
-                            playerOneChoice = randomPlayer;
-                            break;
-
-                    }
+                    Helpers.PlayerColor();
+                    Console.WriteLine("Your Player");
+                    playerOneChoice = fightActions.AssignPlayerToTheFighter(diceRoll);
+                    Console.WriteLine(playerOneChoice);
                     Console.WriteLine();
                     Helpers.ClearColor();
-
 
                     //Selecing the player number 2 
-
+                    int anotherDiceRoll = random.Next(1, 7);
                     Helpers.EnemyColor();
                     Console.WriteLine("Your Enemy");
-                    Helpers.ClearColor();
-                    Console.WriteLine("Press any key to continue\n");
-                    Console.ReadKey();
-
-                    int anotherDiceRoll = random.Next(1, 7);
-                    playerTwo = anotherDiceRoll;
-
-                    Helpers.EnemyColor();
-                    switch (anotherDiceRoll)
-                    {
-                        case 1:
-                            Console.WriteLine($"Your enemy: {destroyer}");
-                            playerTwoChoice = destroyer;
-                            break;
-                        case 2:
-                            Console.WriteLine($"Your enemy: {defender}");
-                            playerTwoChoice = defender;
-                            break;
-                        case 3:
-                            Console.WriteLine($"Your enemy: {balancer}");
-                            playerTwoChoice = balancer;
-                            break;
-                        case 4:
-                            Console.WriteLine($"Your enemy: {killer}");
-                            playerTwoChoice = killer;
-                            break;
-                        case 5:
-                            Console.WriteLine($"Your enemy: {loser}");
-                            playerTwoChoice = loser;
-                            break;
-                        case 6:
-                            Console.WriteLine($"Your enemy: {randomPlayer}");
-                            playerTwoChoice = randomPlayer;
-                            break;
-
-                    }
-                    Console.WriteLine();
+                    playerTwoChoice = fightActions.AssignPlayerToTheFighter(anotherDiceRoll);
+                    Console.WriteLine(playerTwoChoice);
                     Helpers.ClearColor();
 
+                    Console.WriteLine("Press any key to start the fight.\n");
                     Console.ReadKey();
 
+                    //Starting the fight
                     while (playerOneChoice.Health > 0 && playerTwoChoice.Health > 0)
                     {
                         int RandomSelection = random.Next(1, 3);
-                        Console.WriteLine("Random selection of the players to hit.\n");
-                        if (RandomSelection == 1)
+                        Console.WriteLine("Random selection of the players to hit.");
+
+                        if (RandomSelection ==1)
                         {
-                            Helpers.PlayerColor();
-                            Console.WriteLine($"Player 1 {playerOneChoice.Name} starts to hit!");
-                            Helpers.ClearColor();
-
-                            Console.WriteLine("Each attack reduce your defence power with 10 points");
-                            Console.WriteLine("Start.....\n");
-                            Console.ReadKey();
-
-
-                            if (playerOneChoice.AttackPower >= playerTwoChoice.DefencePower)
-                            {
-                                playerTwoChoice.Health = playerTwoChoice.Health - (playerOneChoice.AttackPower - playerTwoChoice.DefencePower);
-                                playerOneChoice.DefencePower = playerOneChoice.DefencePower <= 0 ? 0 : playerOneChoice.DefencePower -= 10;
-
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine(playerOneChoice);
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.WriteLine(playerTwoChoice);
-                                Helpers.ClearColor();
-                                Console.ReadKey();
-
-                            }else if(RandomSelection == 2)
-                            {
-                                playerOneChoice.Health = playerOneChoice.Health - (playerTwoChoice.AttackPower - playerOneChoice.DefencePower);
-                                playerOneChoice.DefencePower = playerOneChoice.DefencePower <= 0 ? 0 : playerOneChoice.DefencePower -= 10;
-
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine(playerOneChoice);
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.WriteLine(playerTwoChoice);
-                                Helpers.ClearColor();
-                                Console.ReadKey();
-                            }
-
-                        }
+                            fightActions.PeformAttackForPLayerOne(playerOneChoice,playerTwoChoice);
+                        } 
                         else
                         {
-                            Helpers.EnemyColor();
-                            Console.WriteLine($"Your enemy {playerTwoChoice.Name} starts to hit!");
-                            Helpers.ClearColor();
-                            Console.WriteLine("Each attack reduce your enemy's defence power with 10 points");
-                            Console.WriteLine("Start.....\n");
-                            Console.ReadKey();
-
-
-                            if (playerTwoChoice.AttackPower >= playerOneChoice.DefencePower)
-                            {
-                                playerOneChoice.Health = playerOneChoice.Health - (playerTwoChoice.AttackPower - playerOneChoice.DefencePower);
-                                playerTwoChoice.DefencePower = playerTwoChoice.DefencePower <= 0 ? 0 : playerTwoChoice.DefencePower -= 10;
-
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine(playerOneChoice);
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.WriteLine(playerTwoChoice);
-                                Helpers.ClearColor();
-                                Console.ReadKey();
-                            }else
-                            {
-                                playerTwoChoice.Health = playerTwoChoice.Health - (playerTwoChoice.DefencePower-playerOneChoice.AttackPower );
-                                playerTwoChoice.DefencePower = playerTwoChoice.DefencePower <= 0 ? 0 : playerTwoChoice.DefencePower -= 10;
-
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine(playerOneChoice);
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.WriteLine(playerTwoChoice);
-                                Helpers.ClearColor();
-                                Console.ReadKey();
-                            }
+                            fightActions.PeformAttackForEnemy(playerOneChoice, playerTwoChoice);
 
                         }
 
                         
-                    }
+
+                    Console.WriteLine("");
+                    Console.WriteLine("****************************************");
+                    Console.WriteLine("*       Stats After the Attack         *");
+                    Console.WriteLine("****************************************\n");
+
+                    Console.WriteLine($"Your Health: {playerOneChoice.Health}  |  Health for the Enemy: {playerTwoChoice.Health}");
+                    Console.ResetColor();
+
+                    Console.WriteLine(""); 
+
+                    Console.WriteLine("****************************************");
+                    Console.WriteLine("*      Attack and Defense Powers       *");
+                    Console.WriteLine("****************************************\n");
+                    Console.WriteLine($"Your Attack Power: {playerOneChoice.AttackPower}   |  Your  Defense Power: {playerOneChoice.DefencePower}");
+                    Console.WriteLine($"Enemy Attack Power: {playerTwoChoice.AttackPower}  |  Enemy Defense Power: {playerTwoChoice.DefencePower}\n");
+                    Console.WriteLine("****************************************");
+
+
+
+                    Helpers.ClearColor();
+
+                }
+
+                    //Deciding the winner
                     if (playerOneChoice.Health <= 0)
                     {
                         Helpers.WarningColor();
-                        Console.WriteLine("You lost, press any key to play again!");
+                        Console.WriteLine("You lost!");
                         Console.ReadKey();
                     }
 
                     else if (playerTwoChoice.Health <= 0)
                     {
                         Helpers.AcceptingColor();
-                        Console.WriteLine("Your enemy has lost!, press any key to continue");
+                        Console.WriteLine("You won, congrats!");
                         Console.ReadKey();
 
                     }
+
+                    //restarting the game
                     Helpers.ClearColor();
-                    Console.WriteLine("Press any key to restart the game -_______-");
+                    Console.WriteLine("Press any key to restart the game ~_~");
                     Console.ReadKey();
                     Console.Clear();
+
+
+                    
                 }
-                else
-                {
-                    break;
-                }
+               
 
                 
 
@@ -233,4 +142,4 @@ namespace ArenaFight
 
         }
     }
-}
+
